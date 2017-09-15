@@ -11,3 +11,15 @@ Free Course: Essential Concepts
 
 Free Course: Continuation: Lifecycle Methods, Stateless Components and more
 <https://www.codecademy.com/learn/react-102>
+
+Awesome react
+<https://github.com/enaqx/awesome-react>
+
+Redux doc's
+<http://redux.js.org/>
+
+Dan Abramov's free course for redux
+<https://egghead.io/courses/getting-started-with-redux>
+
+React-redux-links
+<https://github.com/markerikson/react-redux-links>

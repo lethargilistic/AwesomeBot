@@ -39,7 +39,7 @@ function getLastCommit() {
     const commitMessage = commitData[0].commit.message.replace('\n\n', ' ')
       .replace('\n', ' ');
     lastCommit.link = commitData[0].html_url;
-    lastCommit.username = commitData[0].author.login;
+    lastCommit.username = commitData[0].author ? commitData[0].author.login : 'unkown';
     lastCommit.message = commitTemplate.replace('$username', lastCommit.username)
       .replace('$message', commitMessage);
   });
@@ -59,7 +59,7 @@ function getCurrentCommit() {
         return;
       }
       currentCommit.link = JSON.parse(body).html_url;
-      currentCommit.username = JSON.parse(body).author.login;
+      currentCommit.username = JSON.parse(body).author ? JSON.parse(body).author.login : 'unkown';
       currentCommit.message = commitTemplate.replace('$username', currentCommit.username)
         .replace('$message', gitOutput.split(' ').slice(1).join(' '));
     });
@@ -72,11 +72,14 @@ function getContributors() {
     headers: githubHeaders,
   }, (error, response, body) => {
     let jsonData = JSON.parse(body);
-    jsonData = jsonData.slice(0, 10);
-
-    jsonData.forEach((elem) => {
-      contributorsMessage += markdownLink.replace('$text', elem.login).replace('$link', elem.html_url) + '\n';
-    });
+    if (Array.isArray(jsonData) && jsonData.length >= 10) {
+      jsonData = jsonData.slice(0, 10);
+      contributorsMessage = jsonData.slice(0, 10).reduce((acc, cv) =>
+        acc + markdownLink.replace('$text', cv.login).replace('$link', cv.html_url) + '\n'
+      , '');
+    } else {
+      contributorsMessage = 'There was an error trying to get the contributors list :(';
+    }
   });
 }
 
